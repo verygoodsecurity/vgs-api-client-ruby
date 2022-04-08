@@ -26,6 +26,7 @@ lib/vgs_api_client/api/aliases_api.rb
 lib/vgs_api_client/api_client.rb
 lib/vgs_api_client/api_error.rb
 lib/vgs_api_client/configuration.rb
+lib/vgs_api_client/configuration.rb
 lib/vgs_api_client/models/alias_format.rb
 lib/vgs_api_client/models/api_error.rb
 lib/vgs_api_client/models/create_aliases_request.rb
