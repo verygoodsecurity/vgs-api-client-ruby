@@ -14,52 +14,17 @@ require 'date'
 require 'time'
 
 module VgsApiClient
-  class RevealedData
-    # List of aliases associated with the value.
-    attr_accessor :aliases
+  class CreateAliasesRequestReference
+    # Existing alias to use as a reference.
+    attr_accessor :_alias
 
-    # List of tags the value is classified with.
-    attr_accessor :classifiers
-
-    # Creation time, in UTC.
-    attr_accessor :created_at
-
-    # Storage medium to use.  VOLATILE results in data being persisted into an in-memory data store for one hour which is required for PCI compliant storage of card security code data. 
-    attr_accessor :storage
-
-    # Decrypted value stored in the vault.
-    attr_accessor :value
-
-    class EnumAttributeValidator
-      attr_reader :datatype
-      attr_reader :allowable_values
-
-      def initialize(datatype, allowable_values)
-        @allowable_values = allowable_values.map do |value|
-          case datatype.to_s
-          when /Integer/i
-            value.to_i
-          when /Float/i
-            value.to_f
-          else
-            value
-          end
-        end
-      end
-
-      def valid?(value)
-        !value || allowable_values.include?(value)
-      end
-    end
+    attr_accessor :format
 
     # Attribute mapping from ruby-style variable name to JSON key.
     def self.attribute_map
       {
-        :'aliases' => :'aliases',
-        :'classifiers' => :'classifiers',
-        :'created_at' => :'created_at',
-        :'storage' => :'storage',
-        :'value' => :'value'
+        :'_alias' => :'alias',
+        :'format' => :'format'
       }
     end
 
@@ -71,11 +36,8 @@ module VgsApiClient
     # Attribute type mapping.
     def self.openapi_types
       {
-        :'aliases' => :'Array<ModelAlias>',
-        :'classifiers' => :'Array<String>',
-        :'created_at' => :'Time',
-        :'storage' => :'String',
-        :'value' => :'String'
+        :'_alias' => :'String',
+        :'format' => :'AliasFormat'
       }
     end
 
@@ -89,41 +51,23 @@ module VgsApiClient
     # @param [Hash] attributes Model attributes in the form of hash
     def initialize(attributes = {})
       if (!attributes.is_a?(Hash))
-        fail ArgumentError, "The input argument (attributes) must be a hash in `VgsApiClient::RevealedData` initialize method"
+        fail ArgumentError, "The input argument (attributes) must be a hash in `VgsApiClient::CreateAliasesRequestReference` initialize method"
       end
 
       # check to see if the attribute exists and convert string to symbol for hash key
       attributes = attributes.each_with_object({}) { |(k, v), h|
         if (!self.class.attribute_map.key?(k.to_sym))
-          fail ArgumentError, "`#{k}` is not a valid attribute in `VgsApiClient::RevealedData`. Please check the name to make sure it's valid. List of attributes: " + self.class.attribute_map.keys.inspect
+          fail ArgumentError, "`#{k}` is not a valid attribute in `VgsApiClient::CreateAliasesRequestReference`. Please check the name to make sure it's valid. List of attributes: " + self.class.attribute_map.keys.inspect
         end
         h[k.to_sym] = v
       }
 
-      if attributes.key?(:'aliases')
-        if (value = attributes[:'aliases']).is_a?(Array)
-          self.aliases = value
-        end
+      if attributes.key?(:'_alias')
+        self._alias = attributes[:'_alias']
       end
 
-      if attributes.key?(:'classifiers')
-        if (value = attributes[:'classifiers']).is_a?(Array)
-          self.classifiers = value
-        end
-      end
-
-      if attributes.key?(:'created_at')
-        self.created_at = attributes[:'created_at']
-      end
-
-      if attributes.key?(:'storage')
-        self.storage = attributes[:'storage']
-      else
-        self.storage = 'PERSISTENT'
-      end
-
-      if attributes.key?(:'value')
-        self.value = attributes[:'value']
+      if attributes.key?(:'format')
+        self.format = attributes[:'format']
       end
     end
 
@@ -131,25 +75,23 @@ module VgsApiClient
     # @return Array for valid properties with the reasons
     def list_invalid_properties
       invalid_properties = Array.new
+      if @_alias.nil?
+        invalid_properties.push('invalid value for "_alias", _alias cannot be nil.')
+      end
+
+      if @format.nil?
+        invalid_properties.push('invalid value for "format", format cannot be nil.')
+      end
+
       invalid_properties
     end
 
     # Check to see if the all the properties in the model are valid
     # @return true if the model is valid
     def valid?
-      storage_validator = EnumAttributeValidator.new('String', ["PERSISTENT", "VOLATILE"])
-      return false unless storage_validator.valid?(@storage)
+      return false if @_alias.nil?
+      return false if @format.nil?
       true
-    end
-
-    # Custom attribute writer method checking allowed values (enum).
-    # @param [Object] storage Object to be assigned
-    def storage=(storage)
-      validator = EnumAttributeValidator.new('String', ["PERSISTENT", "VOLATILE"])
-      unless validator.valid?(storage)
-        fail ArgumentError, "invalid value for \"storage\", must be one of #{validator.allowable_values}."
-      end
-      @storage = storage
     end
 
     # Checks equality by comparing each attribute.
@@ -157,11 +99,8 @@ module VgsApiClient
     def ==(o)
       return true if self.equal?(o)
       self.class == o.class &&
-          aliases == o.aliases &&
-          classifiers == o.classifiers &&
-          created_at == o.created_at &&
-          storage == o.storage &&
-          value == o.value
+          _alias == o._alias &&
+          format == o.format
     end
 
     # @see the `==` method
@@ -173,7 +112,7 @@ module VgsApiClient
     # Calculates hash code according to all attributes.
     # @return [Integer] Hash code
     def hash
-      [aliases, classifiers, created_at, storage, value].hash
+      [_alias, format].hash
     end
 
     # Builds the object from hash
