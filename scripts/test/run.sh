@@ -30,4 +30,4 @@ else
   bundle install
 fi
 
-bundle exec rspec ./spec/test_api_spec.rb
+bundle exec rspec ./spec/*.rb
