@@ -7,6 +7,8 @@ RUN apk update && \
     gem install bundler && \
     gem install rspec-support
 
+ADD . /vgs-api-client
+
 WORKDIR /vgs-api-client/
 
 ENTRYPOINT ["bash", "./scripts/test/run.sh"]
