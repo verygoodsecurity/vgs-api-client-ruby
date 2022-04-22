@@ -4,18 +4,10 @@ RUN apk update && \
     apk add bash && \
     apk add build-base && \
     apk add libcurl && \
-    gem install bundler && \
-    gem install rspec-support
-
-RUN mkdir -p /vgs-api-client/ && \
-    mkdir -p /vgs-api-client/tmp
+    gem install rspec
 
 ADD ./scripts/test-e2e /vgs-api-client/scripts
 ADD ./spec /vgs-api-client/spec
-
-# Temporarily copying gem files to tmp/ dir
-ADD ./vgs_api_client.gemspec /vgs-api-client/tmp/vgs_api_client.gemspec
-ADD ./Gemfile /vgs-api-client/tmp/Gemfile
 
 WORKDIR /vgs-api-client/
 
