@@ -10,4 +10,4 @@ grep -rl XXX.YYY.ZZZ . | xargs sed -i "s/XXX.YYY.ZZZ/$VERSION/g"
 bundle install
 
 echo "Running tests"
-bundle exec rspec ./spec/*.rb
+bundle exec rspec -f documentation ./spec/*.rb
