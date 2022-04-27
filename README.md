@@ -1,4 +1,4 @@
-# vgs-api-client-python
+# vgs-api-client-ruby
 
 This repository contains a Ruby API client library for the Very Good Security API.
 
