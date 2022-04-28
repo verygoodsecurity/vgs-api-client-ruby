@@ -1,5 +1,7 @@
 # vgs-api-client-ruby
 
+[![CircleCI](https://circleci.com/gh/verygoodsecurity/vgs-api-client-ruby.svg?style=svg)](https://github.com/verygoodsecurity/vgs-api-client-ruby)
+
 This repository contains a Ruby API client library for the Very Good Security API.
 
 ### Requirements
@@ -27,6 +29,10 @@ https://www.verygoodsecurity.com/docs/vault/api/
 ### Tutorial
 
 https://www.verygoodsecurity.com/docs/tokenization/ruby-tutorial
+
+### Artifact
+
+https://rubygems.org/gems/vgs_api_client/
 
 ### Support
 
