@@ -32,7 +32,6 @@ module VGS
       else
         response.data
       end
-
     end
 
     def reveal(aliases)
@@ -80,5 +79,4 @@ module VGS
     config.host = host
     config
   end
-
 end
