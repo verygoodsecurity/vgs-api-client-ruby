@@ -9,8 +9,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Very Good Security"]
   s.email       = ["support@verygoodsecurity.com"]
   s.homepage    = "https://github.com/verygoodsecurity/vgs-api-client-ruby"
-  s.summary     = "VGS API Client"
-  s.description = "This gem maps to VGS Vault API"
+  s.summary     = "Very Good Security API Client"
+  s.description = "Very Good Security API Client library. More details on https://www.verygoodsecurity.com/"
   s.license     = "BSD-3-Clause"
   s.required_ruby_version = ">= 2.6"
 
