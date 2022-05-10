@@ -3,9 +3,43 @@ require 'securerandom'
 require 'vgs_api_client'
 
 describe 'AliasesApiSpec' do
-  before(:all) do
+  before(:each) do
     config = VGS.config(username = ENV['VAULT_API_USERNAME'], password = ENV['VAULT_API_PASSWORD'])
-    @aliases_api = VGS::Aliases.new config
+    @api = VGS::Aliases.new config
+  end
+
+  describe 'invalid auth' do
+    it 'should fail if invalid auth provided' do
+      invalid_config = VGS.config(username = 'Invalid', password = 'Invalid')
+      api = VGS::Aliases.new invalid_config
+      data = [{
+                format: 'UUID',
+                value: 'Joe Doe'
+              }]
+
+      expect { api.redact data }.to raise_error(VGS::UnauthorizedError)
+    end
+  end
+
+  describe 'invalid config' do
+    it 'should fail if invalid config provided' do
+      expect { VGS::Aliases.new nil }.to raise_error(ArgumentError)
+    end
+  end
+
+  describe 'invalid host' do
+    it 'should fail if invalid host provided' do
+      config = VGS.config(
+        username = ENV['VAULT_API_USERNAME'],
+        password = ENV['VAULT_API_PASSWORD'],
+        host = 'https://echo.apps.verygood.systems')
+      api = VGS::Aliases.new config
+      data = [{
+                format: 'UUID',
+                value: 'Joe Doe'
+              }]
+      expect { api.redact data }.to raise_error(VGS::NotFoundError)
+    end
   end
 
   describe 'redact' do
@@ -21,7 +55,7 @@ describe 'AliasesApiSpec' do
                 value: 'Joe Doe',
                 storage: 'VOLATILE'
               }]
-      aliases = @aliases_api.redact data
+      aliases = @api.redact data
       expect(aliases.length).to eq 2
       data.each_with_index do |item, index|
         expect(aliases[index].value).to eq item[:value]
@@ -46,14 +80,14 @@ describe 'AliasesApiSpec' do
                 value: 'Joe Doe',
                 storage: 'VOLATILE'
               }]
-      aliases = @aliases_api.redact(data).map { |item| item.aliases[0]._alias }
+      aliases = @api.redact(data).map { |item| item.aliases[0]._alias }
 
-      response = @aliases_api.reveal aliases
+      response = @api.reveal aliases
 
       expect(response.length).to eq 2
       original_values = data.map { |i| i[:value] }
       revealed_values = response.values.map { |i| i.value }
-      expect(Set.new(original_values)).to eq Set.new(revealed_values)
+      expect(Set.new original_values).to eq Set.new revealed_values
     end
   end
 
@@ -63,11 +97,11 @@ describe 'AliasesApiSpec' do
                 format: 'UUID',
                 value: SecureRandom.alphanumeric(10)
               }]
-      _alias = @aliases_api.redact(data).map { |item| item.aliases[0]._alias }[0]
+      _alias = @api.redact(data).map { |item| item.aliases[0]._alias }[0]
 
-      @aliases_api.update _alias, classifiers: %w[secure]
+      @api.update _alias, classifiers: %w[secure]
 
-      response = @aliases_api.reveal(_alias)
+      response = @api.reveal _alias
       expect(response[_alias].classifiers).to eq %w[secure]
     end
   end
@@ -78,11 +112,11 @@ describe 'AliasesApiSpec' do
                 format: 'UUID',
                 value: '5201784564572092'
               }]
-      _alias = @aliases_api.redact(data).map { |item| item.aliases[0]._alias }[0]
+      _alias = @api.redact(data).map { |item| item.aliases[0]._alias }[0]
 
-      @aliases_api.delete _alias
+      @api.delete _alias
 
-      expect { @aliases_api.reveal(_alias) }.to raise_error(VGS::VgsApiException)
+      expect { @api.reveal _alias }.to raise_error(VGS::VgsApiError)
     end
   end
 
