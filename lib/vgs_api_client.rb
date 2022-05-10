@@ -13,7 +13,7 @@ module VGS
       begin
         requests = data.map do |item|
           VgsApiClient::CreateAliasesRequestNew.new(attributes = {
-            :format => VgsApiClient::AliasFormat.build_from_hash(item[:format]),
+            :format => VgsApiClient::AliasFormat.build_from_hash(item[:format] || "UUID"),
             :classifiers => item[:classifiers],
             :value => item[:value],
             :storage => item[:storage]
@@ -32,7 +32,6 @@ module VGS
       else
         response.data
       end
-
     end
 
     def reveal(aliases)
@@ -80,5 +79,4 @@ module VGS
     config.host = host
     config
   end
-
 end
